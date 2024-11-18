@@ -11,10 +11,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductDTO {
+    private Long id;
     private String productId;
-    @Enumerated(EnumType.STRING)
     private Status status;
     private String fulfillmentCenter;
-    private int quantity;
-    private double value;
+    private Integer quantity;
+    private Double value;
 }

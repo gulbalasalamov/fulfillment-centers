@@ -21,6 +21,6 @@ public class Product {
     @Enumerated(EnumType.STRING)
     private Status status;
     private String fulfillmentCenter;
-    private int quantity;
-    private double value;
+    private Integer quantity;
+    private Double value;
 }

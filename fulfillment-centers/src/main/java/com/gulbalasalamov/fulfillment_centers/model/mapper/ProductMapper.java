@@ -6,6 +6,7 @@ import com.gulbalasalamov.fulfillment_centers.model.entity.Product;
 public class ProductMapper {
     public static ProductDTO toDto(Product product) {
         ProductDTO productDTO = new ProductDTO();
+        productDTO.setId(product.getId());
         productDTO.setProductId(product.getProductId());
         productDTO.setStatus(product.getStatus());
         productDTO.setFulfillmentCenter(product.getFulfillmentCenter());
@@ -16,6 +17,7 @@ public class ProductMapper {
 
     public static Product toEntity(ProductDTO productDTO) {
         Product product = new Product();
+        product.setId(productDTO.getId());
         product.setProductId(productDTO.getProductId());
         product.setStatus(productDTO.getStatus());
         product.setFulfillmentCenter(productDTO.getFulfillmentCenter());

@@ -1,6 +1,7 @@
 package com.gulbalasalamov.fulfillment_centers.controller;
 
 import com.gulbalasalamov.fulfillment_centers.model.dto.ProductDTO;
+import com.gulbalasalamov.fulfillment_centers.model.enums.Status;
 import com.gulbalasalamov.fulfillment_centers.service.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +38,8 @@ public class ProductController {
 
     @GetMapping("/total-value/status/{status}")
     public ResponseEntity<Double> getTotalValueByStatus(@PathVariable String status) {
-        double totalValuesByStatus = productService.getTotalValuesByStatus(status);
+        Status statusEnum = Status.valueOf(status.toUpperCase());
+        double totalValuesByStatus = productService.getTotalValuesByStatus(statusEnum);
         return new ResponseEntity<>(totalValuesByStatus, HttpStatus.OK);
     }
 
@@ -47,7 +49,7 @@ public class ProductController {
         return new ResponseEntity<>(savedProduct,HttpStatus.CREATED);
     }
 
-    @PutMapping("/update/{id}")
+    @PatchMapping("/update/{id}")
     public ResponseEntity<ProductDTO> updateProduct(@PathVariable long id, @RequestBody ProductDTO productDTO) {
         ProductDTO updatedProduct = productService.updateProduct(id, productDTO);
         return new ResponseEntity<>(updatedProduct,HttpStatus.OK);
