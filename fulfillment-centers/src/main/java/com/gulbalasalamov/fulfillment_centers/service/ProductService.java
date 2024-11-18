@@ -8,6 +8,8 @@ import com.gulbalasalamov.fulfillment_centers.model.mapper.ProductMapper;
 import com.gulbalasalamov.fulfillment_centers.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -69,11 +71,16 @@ public class ProductService {
         return "Product with id: " + id + " deleted successfully";
     }
 
-    public double getTotalValuesByStatus(Status status) {
-        return productRepository.findByStatus(status)
-                .stream()
-                .mapToDouble(Product::getValue)
-                .sum();
+    public double getTotalValuesByStatus(String status) {
+        try {
+            Status statusEnum = Status.valueOf(status.toUpperCase());
+            List<Product> products = productRepository.findByStatus(statusEnum);
+            return products.stream()
+                    .mapToDouble(Product::getValue)
+                    .sum();
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid status value: " + status + " .Accepted values are: SELLABLE, UNFULFILLABLE, INBOUND");
+        }
     }
 
     private void validateProductDTO(ProductDTO productDTO) {
@@ -81,11 +88,10 @@ public class ProductService {
             throw new IllegalArgumentException("Product ID cannot be null or empty");
         }
         if (productDTO.getStatus() == null) {
-            throw new IllegalArgumentException("Status cannot be null");
+            throw new IllegalArgumentException("Status cannot be null. Status must be: SELLABLE, UNFULFILLABLE, INBOUND");
         }
         try {
-            String name = productDTO.getStatus().name();
-            Status status = Status.valueOf(name);
+            Status statusEnum = Status.valueOf(productDTO.getStatus().name().toUpperCase());
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Invalid status value: " + productDTO.getStatus() + ". Status must be: SELLABLE, UNFULFILLABLE, INBOUND");
         }
@@ -132,5 +138,18 @@ public class ProductService {
         }
     }
 
-
+    public List<ProductDTO> createDummyData() {
+        List<ProductDTO> dummyProducts = Arrays.asList(
+                new ProductDTO(null, "P121", Status.INBOUND, "FC4", 30, 721.4),
+                new ProductDTO(null, "P122", Status.SELLABLE, "FC1", 10, 100.0),
+                new ProductDTO(null, "P123", Status.SELLABLE, "FC2", 10, 134.0),
+                new ProductDTO(null, "P124", Status.UNFULFILLABLE, "FC3", 20, 200.0),
+                new ProductDTO(null, "P124", Status.UNFULFILLABLE, "FC3", 20, 847.0),
+                new ProductDTO(null, "P125", Status.INBOUND, "FC4", 30, 300.0));
+        List<ProductDTO> savedProducts = new ArrayList<>();
+        for (ProductDTO productDTO : dummyProducts) {
+            savedProducts.add(saveProduct(productDTO));
+        }
+        return savedProducts;
+    }
 }

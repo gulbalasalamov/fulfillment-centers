@@ -38,8 +38,7 @@ public class ProductController {
 
     @GetMapping("/total-value/status/{status}")
     public ResponseEntity<Double> getTotalValueByStatus(@PathVariable String status) {
-        Status statusEnum = Status.valueOf(status.toUpperCase());
-        double totalValuesByStatus = productService.getTotalValuesByStatus(statusEnum);
+        double totalValuesByStatus = productService.getTotalValuesByStatus(status);
         return new ResponseEntity<>(totalValuesByStatus, HttpStatus.OK);
     }
 
