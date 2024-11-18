@@ -1,8 +1,11 @@
 package com.gulbalasalamov.fulfillment_centers.controller;
 
+import com.gulbalasalamov.fulfillment_centers.exception.GlobalExceptionHandler;
 import com.gulbalasalamov.fulfillment_centers.model.dto.ProductDTO;
 import com.gulbalasalamov.fulfillment_centers.model.enums.Status;
 import com.gulbalasalamov.fulfillment_centers.service.ProductService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/products")
 public class ProductController {
+
     private final ProductService productService;
 
     public ProductController(ProductService productService) {
@@ -20,6 +24,7 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductDTO> getProductById(@PathVariable long id) {
+
         ProductDTO productDTO = productService.getProductById(id);
         return new ResponseEntity<>(productDTO,HttpStatus.OK);
     }
