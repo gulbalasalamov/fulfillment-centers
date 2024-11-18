@@ -69,7 +69,7 @@
 ## API-документация (API Documentation)
 
 Вы также можете использовать коллекции и методы API DocumentaAPI в своем собственном Postman WorkSpace, создав их ответвление.
-[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/5231798-61b64e8e-4a43-4790-8557-43af332fb0a0?action=collection%2Ffork&collection-url=entityId%3D5231798-61b64e8e-4a43-4790-8557-43af332fb0a0%26entityType%3Dcollection%26workspaceId%3Dc06354ee-67d5-4a2e-982e-7f7ed7000455)
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://god.gw.postman.com/run-collection/5231798-95d3e224-ec16-40d2-898c-e4460e948112?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D5231798-95d3e224-ec16-40d2-898c-e4460e948112%26entityType%3Dcollection%26workspaceId%3Dacd71577-82db-475f-be01-2352ece0701a)
 
 
 ## Product API
