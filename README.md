@@ -228,6 +228,67 @@ Response:
 
 ---
 
+---
+
+> **GetProductsByFilters**
+
+Перечисляет все продукты. / Lists all products
+
+| Type | Method                  |
+|------|-------------------------|
+| GET  | /api/v1/products/filter |
+
+Parametres
+
+- productId (optional): product id (example: P123)
+- status (optional): product status (example: SELLABLE, UNFULFILLABLE, INBOUND)
+- fulfillmentCenter (optional): fulfillment center (example: FC1, FC2)
+- minQuantity (optional): Minimum amount (example: 10)
+- maxQuantity (optional): Maxsimum amount (example: 100)
+- minValue (optional): Minimum value (example: 50.0)
+- maxValue (optional): Maksimum value (example: 500.0)
+
+Example requests:
+
+1. Only product id: 
+
+> http://localhost:8080/api/v1/products/filter?productId=P123
+
+
+2. Only Status and quantity
+
+>http://localhost:8080/api/v1/products/filter?status=INBOUND&minQuantity=5&maxQuantity=20
+
+
+3. All parameters
+
+> http://localhost:8080/api/v1/products/filter?productId=P123&status=SELLABLE&fulfillmentCenter=FC1&minQuantity=10&maxQuantity=100&minValue=50.0&maxValue=500.0
+
+
+Response:
+```json
+[
+    {
+        "id": 1,
+        "productId": "P121",
+        "status": "INBOUND",
+        "fulfillmentCenter": "FC4",
+        "quantity": 30,
+        "value": 721.4
+    },
+    {
+        "id": 2,
+        "productId": "P122",
+        "status": "SELLABLE",
+        "fulfillmentCenter": "FC1",
+        "quantity": 10,
+        "value": 100.0
+    }
+]
+```
+
+---
+
 > **GetProductByStatus**
 
 Перечисляет все продукты с указанным статусом. / Lists all products with the specified status.
@@ -272,7 +333,10 @@ Response:
 
 Response:
 ```json
-234.0
+{
+   "value": 1500.0
+}
+
 ```
 
 ## Test Coverage:
