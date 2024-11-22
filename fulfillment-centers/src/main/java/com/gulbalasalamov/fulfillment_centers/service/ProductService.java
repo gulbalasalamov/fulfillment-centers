@@ -6,8 +6,11 @@ import com.gulbalasalamov.fulfillment_centers.model.entity.Product;
 import com.gulbalasalamov.fulfillment_centers.model.enums.Status;
 import com.gulbalasalamov.fulfillment_centers.model.mapper.ProductMapper;
 import com.gulbalasalamov.fulfillment_centers.repository.ProductRepository;
+import com.gulbalasalamov.fulfillment_centers.repository.ProductSpecification;
+import com.gulbalasalamov.fulfillment_centers.response.TotalValueResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,6 +27,28 @@ public class ProductService {
 
     public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
+    }
+
+    public List<ProductDTO> getProductsByFilters(String productId,
+                                                 Status status,
+                                                 String fulfillmentCenter,
+                                                 Integer minQuantity,
+                                                 Integer maxQuantity,
+                                                 Double minValue,
+                                                 Double maxValue) {
+        logger.info("Filtering products with params: productId={}, status={}, fulfillmentCenter={}, minQuantity={}, maxQuantity={}, minValue={}, maxValue={}",
+                productId, status, fulfillmentCenter, minQuantity, maxQuantity, minValue, maxValue);
+
+        Specification<Product> specification = ProductSpecification.withFilters(productId, status, fulfillmentCenter, minQuantity, maxQuantity, minValue, maxValue);
+        List<Product> products = productRepository.findAll(specification);
+        List<ProductDTO> productDTOs = products.stream().map(ProductMapper::toDto).collect(Collectors.toList());
+
+        logger.info("Retrieved {} products with filters", productDTOs.size());
+        List<Product> allWithFilters = productRepository.findAllWithFilters(productId, status, fulfillmentCenter, minQuantity, maxQuantity, minValue, maxValue);
+
+        return productDTOs;
+        
+        
     }
 
     public List<ProductDTO> getAllProducts() {
@@ -93,14 +118,14 @@ public class ProductService {
         return "Product with id: " + id + " deleted successfully";
     }
 
-    public double getTotalValuesByStatus(String status) {
+    public TotalValueResponse getTotalValuesByStatus(String status) {
         logger.info("Calculating total value for products with status: {}", status);
         try {
             Status statusEnum = Status.valueOf(status.toUpperCase());
             List<Product> products = productRepository.findByStatus(statusEnum);
             double totalValue = products.stream().mapToDouble(Product::getValue).sum();
             logger.info("Total value for products with status {}: {}", status, totalValue);
-            return totalValue;
+            return new TotalValueResponse(totalValue,statusEnum);
         } catch (IllegalArgumentException e) {
             logger.error("Invalid status value: {}", status, e);
             throw new IllegalArgumentException("Invalid status value: " + status + " .Accepted values are: SELLABLE, UNFULFILLABLE, INBOUND");
