@@ -4,8 +4,8 @@ import com.gulbalasalamov.fulfillment_centers.exception.ProductNotFoundException
 import com.gulbalasalamov.fulfillment_centers.model.dto.ProductDTO;
 import com.gulbalasalamov.fulfillment_centers.model.entity.Product;
 import com.gulbalasalamov.fulfillment_centers.model.enums.Status;
-import com.gulbalasalamov.fulfillment_centers.model.mapper.ProductMapper;
 import com.gulbalasalamov.fulfillment_centers.repository.ProductRepository;
+import com.gulbalasalamov.fulfillment_centers.response.TotalValueResponse;
 import com.gulbalasalamov.fulfillment_centers.service.ProductService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -145,11 +145,11 @@ public class ProductServiceTest {
     @Test
     void testGetTotalValuesByStatus() {
         logger.info("Testing getTotalValuesByStatus method");
-        when(productRepository.findByStatus(Status.SELLABLE)).thenReturn(Arrays.asList(product1));
-
-        double result = productService.getTotalValuesByStatus("SELLABLE");
-
-        assertEquals(100.0, result);
+        List<Product> products = Arrays.asList(product1);
+        when(productRepository.findByStatus(Status.SELLABLE)).thenReturn(products);
+        TotalValueResponse result = productService.getTotalValuesByStatus("SELLABLE");
+        assertEquals(100.0, result.getValue());
+        assertEquals(Status.SELLABLE, result.getStatus());
         verify(productRepository, times(1)).findByStatus(Status.SELLABLE);
         logger.info("getTotalValuesByStatus test passed");
     }

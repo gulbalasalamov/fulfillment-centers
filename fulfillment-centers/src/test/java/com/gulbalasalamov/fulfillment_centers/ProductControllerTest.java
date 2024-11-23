@@ -4,20 +4,16 @@ package com.gulbalasalamov.fulfillment_centers;
 import com.gulbalasalamov.fulfillment_centers.controller.ProductController;
 import com.gulbalasalamov.fulfillment_centers.model.dto.ProductDTO;
 import com.gulbalasalamov.fulfillment_centers.model.enums.Status;
+import com.gulbalasalamov.fulfillment_centers.response.TotalValueResponse;
 import com.gulbalasalamov.fulfillment_centers.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.Arrays;
 import java.util.Collections;
 
 import static org.mockito.Mockito.*;
@@ -78,11 +74,13 @@ public class ProductControllerTest {
 
     @Test
     public void testGetTotalValueByStatus() throws Exception {
-        when(productService.getTotalValuesByStatus("SELLABLE")).thenReturn(100.0);
+        Status statusEnum = Status.valueOf("SELLABLE");
+        TotalValueResponse totalValueResponse = new TotalValueResponse(100.0, statusEnum);
+        when(productService.getTotalValuesByStatus("SELLABLE")).thenReturn(totalValueResponse);
 
         mockMvc.perform(get("/api/v1/products/total-value/status/SELLABLE"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("100.0"));
+                .andExpect(content().json("{\"value\":100.0,\"status\":\"SELLABLE\"}"));
 
         verify(productService, times(1)).getTotalValuesByStatus("SELLABLE");
     }
